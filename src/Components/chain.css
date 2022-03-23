@@ -1,0 +1,22 @@
+img{
+    width: 350px;
+    height: auto;
+}
+
+h2{
+    color: red;
+}
+
+#chainbtn{
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: white;
+    background-color: #4c2098;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#chainbtn:hover{
+    box-shadow: 0 0.5em 0.5em -0.4em red;
+    transform: translateY(-0.25em);
+}

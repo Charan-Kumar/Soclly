@@ -1,0 +1,17 @@
+.address{
+    position: absolute;
+    right: 5.571030640668524VW;
+    /* padding-left: 20px; */
+    top: 15px;
+    color: white;
+    background-color: #2a252a;
+    width: 10.445682451253482VW;
+    border-radius: 4px;
+}
+nav{
+    height: 50px;
+}
+
+ul{
+    list-style: none;
+}
