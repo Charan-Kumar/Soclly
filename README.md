@@ -1,2 +1,2 @@
-# decentralizedTwitterSpaces
-A Decentralized Twitter Space Implementation on Blockchain using Lens Protocol.
+# Decentralized Spaces
+A Decentralized Space Implementation on Blockchain using LensProtocol.
