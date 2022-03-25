@@ -2,12 +2,15 @@ import React from 'react'
 import {  Menu, Layout } from 'antd';
 import{ HomeOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useEthers } from '@usedapp/core'
+import { useNavigate } from 'react-router-dom'
 
 export default function Sidebar() {
   const { Sider } = Layout;
   const {  deactivate } = useEthers();
+  const navigate = useNavigate();
   const logOut = () => {
     deactivate()
+    navigate('/')
   }
 
   return (

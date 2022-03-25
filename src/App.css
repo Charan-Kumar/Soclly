@@ -5,7 +5,7 @@
   font-size: large;
   font-weight: bold;
   text-align: center;
-  height: 64px;
+  height: 72px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,9 +16,79 @@
 }
 
 .ant-layout-content{
-  height: calc(100vh - 64px);
+  background-color: #fdfdfd !important;
+  height: calc(100vh - 72px);
 }
 
+
+.banner {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  background-color: #fdfdfd;
+  background-image: linear-gradient(
+    to top,
+    rgba(253, 253, 253, 0.3) 0%,
+    rgba(193, 218, 255, 0.3) 100%
+  );
+  overflow: hidden;
+}
+.banner .banner-page {
+  height: 100%;
+  max-width: 1200px;
+  position: relative;
+  margin: auto;
+  will-change: transform;
+}
+.banner-title {
+  font-size: 48px;
+  line-height: 1.5;
+  color: #5f9bf1;
+  margin-bottom: 8px;
+}
+.banner-title-wrapper {
+  width: 40%;
+  max-width: 450px;
+  position: relative;
+  top: 30%;
+  left: 24px;
+  font-family: pingfang sc, -apple-system, BlinkMacSystemFont, segoe ui,
+    hiragino sans gb, microsoft yahei, helvetica neue, Helvetica, Arial,
+    sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol;
+}
+.banner-explain {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+.banner-content {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 48px;
+}
+.banner-button-wrapper .banner-button {
+  background-image: linear-gradient(to right bottom, #82b5ff 0%, #3c89f6 0%);
+  box-shadow: 0 8px 24px rgba(95, 155, 241, 0.35);
+  border-radius: 20px;
+  border: none;
+  padding: 0 42px;
+  line-height: 40px;
+  height: 40px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.banner-button-wrapper .banner-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 13px 24px rgba(95, 155, 241, 0.45);
+  background-image: linear-gradient(to right bottom, #82b5ff 0%, #3c89f6 0%);
+}
+.banner-image {
+  overflow: hidden;
+  width: 55%;
+  max-width: 710px;
+  position: absolute;
+  top: 5%;
+  right: 24px;
+}
 
 /* Wallet Address */
 
