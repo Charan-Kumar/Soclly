@@ -15,7 +15,7 @@ const Chain = () =>{
       window.ethereum.on('chainChanged', async() =>{
         const chainId = await window.ethereum.request({ method: 'eth_chainId'});
         if(chainId === '0x3'){
-window.location.href='/home';            
+window.location.href='/';            
         }
       })
       const switchNetwork = async() =>{

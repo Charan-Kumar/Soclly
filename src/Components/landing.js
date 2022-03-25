@@ -1,16 +1,16 @@
+// import { ethers } from 'ethers';
 import React,{useEffect} from 'react';
-import './navbar.css'
-
+import './landing.css'
+import {login} from'./testing';
 var walletAddress ='' 
 export const connectWallet = async () => {
     if(window.ethereum.isMetaMask) {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const chainId = await window.ethereum.request({ method: 'eth_chainId'});
+      // const provider = new ethers.providers.Web3Provider(window.ethereum)
   // console.log(accounts)
-      if(chainId !== '0x3') {
-        window.location.href='/chain';
-      } 
-      else {
+      
+      // else {
         let wallet = accounts[0];
         // console.log(wallet)
         walletAddress = wallet
@@ -18,7 +18,8 @@ export const connectWallet = async () => {
           //  console.log(walletAddress)
           document.getElementById('connectbtn').innerHTML = wallet.substring(0,8) + "...." + wallet.substring(38,42)
           document.getElementById('connectbtn').classList.value = "nav-item address"
-        }
+       login();
+        // }
         
     return walletAddress
      }
@@ -29,9 +30,14 @@ export const connectWallet = async () => {
     }
   
   }
-const Navbar = () => {
+
+  
+const Landing = () => {
 useEffect(() =>{
-    connectWallet()
+  if(walletAddress !==''){
+    window.location.href='/register';
+  }
+    // connectWallet()
 })
 
 return(
@@ -45,8 +51,11 @@ return(
         </div>
     </div>    
     </nav>
+    <div>
+          <h1 style={{"color":"blue"}}>  This is Decentralized Space!</h1>
+    </div>
     </>
 )
 }
 
-export default Navbar;
+export default Landing;

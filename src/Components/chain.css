@@ -6,6 +6,9 @@ img{
 h2{
     color: red;
 }
+p{
+    color: white;
+}
 
 #chainbtn{
     border: 1px solid transparent;

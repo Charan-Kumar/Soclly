@@ -1,0 +1,14 @@
+#followers:hover{
+    text-decoration: underline;
+}
+div.modal-content{
+    background-color: black;
+}
+
+/* *:not(.classname){
+    box-sizing:unset
+  }
+  .modal-content{
+    border: 1px solid transparent;
+
+} */
