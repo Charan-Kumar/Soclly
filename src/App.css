@@ -1,0 +1,49 @@
+@import 'antd/dist/antd.css';
+
+.logo {
+  color: #fff;
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ant-layout-sider{
+  height: 100vh;
+}
+
+.ant-layout-content{
+  height: calc(100vh - 64px);
+}
+
+
+/* Wallet Address */
+
+.walletAddress{
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 2px 10px 2px 5px;
+  width: 150px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  background-color: rgb(65 68 73) !important;
+  transition: all 0.12s ease-in-out 0s;
+  cursor: pointer;
+  font-weight: bolder;
+}
+
+.walletAddress span{
+  font-family: inherit;
+  font-weight: inherit;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  text-align: center;
+  vertical-align: inherit;
+  color: #fff !important;
+}
