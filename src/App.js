@@ -25,6 +25,8 @@ function App() {
       if( data.profiles.items.length === 0 ){
         navigate('/new_profile')
       }else{
+        localStorage.setItem('profile_id', data.profiles.items[0].id)
+        localStorage.setItem('wallet', data.profiles.items[0].ownedBy)
         navigate('/home')
       }
     }
@@ -45,9 +47,9 @@ function App() {
                 <Col flex={3} className="gutter-row">
                 </Col>
                 <Col flex={1} className="gutter-row" style={{ alignSelf: 'center', display: 'flex', justifyContent: 'flex-end'}}>
-                  { account ? 
+                  { localStorage.getItem('wallet') ? 
                     <>
-                      <WalletAddress address={account} /> 
+                      <WalletAddress address={localStorage.getItem('wallet')} /> 
                     </>
                     : 
                     <Button type="primary" size="large" shape="round">Connect</Button>

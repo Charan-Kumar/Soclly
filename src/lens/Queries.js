@@ -354,3 +354,14 @@ export const CREATE_UNFOLLOW_TYPED_DATA = `
     }
  }
  `
+
+
+export const DOES_FOLLOW = `
+  query($request: DoesFollowRequest!) {
+    doesFollow(request: $request) { 
+			followerAddress
+    	profileId
+    	follows
+		}
+  }
+`;

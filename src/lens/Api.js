@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { ethers } from "ethers";
-import { GENERATE_CHALLENGE, AUTHENTICATE, GET_PROFILES, CREATE_PROFILE, RECOMMENDED_PROFILES , GET_FOLLOWERS, CREATE_FOLLOW_TYPED_DATA, CREATE_UNFOLLOW_TYPED_DATA} from './Queries';
+import { GENERATE_CHALLENGE, AUTHENTICATE, GET_PROFILES, CREATE_PROFILE, RECOMMENDED_PROFILES , GET_FOLLOWERS, CREATE_FOLLOW_TYPED_DATA, CREATE_UNFOLLOW_TYPED_DATA, DOES_FOLLOW} from './Queries';
 import { authenticatedApolloClient, apolloClient } from './Apollo'
 import omitDeep from 'omit-deep';
 import lensHubArtifact from "../assets/abi/LensHub.json";
@@ -87,7 +87,7 @@ export const getFollowerRequest = (profileId) => {
     variables : {
       request : {
       profileId,
-      limit : 10
+      limit : 30
       }
     }
   })
@@ -140,7 +140,7 @@ export const unfollow = async(profileId) => {
    
   const typedData = result.data.createUnfollowTypedData.typedData;
   
-  const signature = await signedTypeData(typedData.domain, typedData.types, typedData.value);
+  const signature = await signTypedData(typedData.domain, typedData.types, typedData.value);
   const { v, r, s } = splitSignature(signature);
   
   // load up the follower nft contract
@@ -185,3 +185,14 @@ export const createFollowTypedData = async (followRequestInfo) => {
     }
    )
 }
+
+export const doesFollowRequest = (followInfos) => {
+  return apolloClient.query({
+    query: gql(DOES_FOLLOW),
+    variables: {
+      request: {
+        followInfos,
+      },
+    },
+  });
+};

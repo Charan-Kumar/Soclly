@@ -1,86 +1,153 @@
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Card, Tabs, Divider, Button } from 'antd';
+import { Card, Tabs, Divider, Button, message, List } from 'antd';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
-import { getProfilesRequest} from '../../lens/Api'
+import { getProfilesRequest, follow , unfollow, getFollowerRequest, doesFollowRequest } from '../../lens/Api'
 import Progress from '../Utilities/Progress';
 import ProfileAvatar from '../Utilities/ProfileAvatar';
 import WalletAddress from '../Utilities/WalletAddress';
+import { shortenAddress } from '@usedapp/core';
 export default function ViewProfile() {
 
   const [ profile, setProfile] = useState(null)
+  const [ followers, setFollowers] = useState([])
   const [ loading, setLoading ] = useState(true)
+  const [ doesFollow, setDoesFollow] = useState(false)
   const params = useParams()
   const { TabPane } = Tabs;
+  const style={ height: '40vh', overflow: 'scroll'}
 
   React.useEffect(async() => {
     try{
       const { data } = await getProfilesRequest({ handles: [ params.handle ] })
       if( data.profiles.items.length === 1 ){
-        setProfile(data.profiles.items[0])
+        let profile = data.profiles.items[0]
+        setProfile(profile)
         setLoading(false)
+
+        const followers = await getFollowerRequest(profile.id)
+        setFollowers(followers.data.followers.items)
+
+        let request = {
+          followerAddress: localStorage.getItem('wallet'),
+          profileId: localStorage.getItem('profile_id'),
+        }
+
+        const follow = await doesFollowRequest(request)
+        setDoesFollow(follow.data.doesFollow[0].follows)
       }
     }catch(error){
       console.log(error)
     }
-  }, [params.address]);
+  }, [params.address, doesFollow ]);
+
+
+  const handleFollow = async () => {
+  
+    try{
+      let followRequest = [{
+        profile: profile.id,
+        followModule: null
+      }]
+      setLoading(true)
+      await follow(followRequest)
+      setLoading(false)
+      setDoesFollow(true)
+      message.success(`Your are following ${profile.handle} sucessfully.`);
+      
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  const handleUnFollow= async() => {
+    try{
+      let followRequest = [{
+        profile: profile.id,
+        followModule: null
+      }]
+      setLoading(true)
+      await unfollow( profile.id)
+      setDoesFollow(false)
+      setLoading(false)
+      message.success(`Your are unfollowing ${profile.handle} sucessfully.`);
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   return (
     <Card hoverable={true}>
       { loading ? <Progress active={loading} /> : 
-        <div class="profile-wrapper">
-          <div class="profile-header has-text-centered">
-            <div class="h-avatar is-xl">
+        <div className="profile-wrapper">
+          <div className="profile-header has-text-centered">
+            <div className="h-avatar is-xl">
               <ProfileAvatar profile={profile} size={100} />
             </div>
-            <h3 class="title is-4 is-narrow is-thin">{ profile.name ? profile.name : "Unknown Name" }</h3>
-            <p class="title is-4 is-narrow is-thin">{ profile.handle }</p>
-            <p class="light-text">{ profile.bio ? profile.bio : "Bio Unavailable" }</p>
+            <h3 className="title is-4 is-narrow is-thin">{ profile.name ? profile.name : "Unknown Name" }</h3>
+            <p className="title is-4 is-narrow is-thin">{ profile.handle }</p>
+            <p className="light-text">{ profile.bio ? profile.bio : "Bio Unavailable" }</p>
             <WalletAddress address={profile.ownedBy} displayCenter={true} />
-            <div class="profile-stats">
-              <div class="profile-stat">
-                <i class="lnil lnil-users-alt"></i>
+            <div className="profile-stats">
+              <div className="profile-stat">
+                <i className="lnil lnil-users-alt"></i>
                 <span>{ profile.stats.totalFollowers } Followers</span>
               </div>
-              <div class="separator"></div>
-              <div class="profile-stat">
-                <i class="lnil lnil-checkmark-circle"></i>
+              <div className="separator"></div>
+              <div className="profile-stat">
+                <i className="lnil lnil-checkmark-circle"></i>
                 <span>{ profile.stats.totalFollowing } Following</span>
               </div>
-              <div class="separator"></div>
-              <div class="profile-stat">
-                <i class="lnil lnil-checkmark-circle"></i>
+              <div className="separator"></div>
+              <div className="profile-stat">
+                <i className="lnil lnil-checkmark-circle"></i>
                 <span>{ profile.stats.totalPosts } Posts</span>
               </div>
-              <div class="separator"></div>
-              <div class="profile-stat">
-                <i class="lnil lnil-checkmark-circle"></i>
+              <div className="separator"></div>
+              <div className="profile-stat">
+                <i className="lnil lnil-checkmark-circle"></i>
                 <span>{ profile.stats.totalPublications } Publications</span>
               </div>
-              <div class="separator"></div>
-              <div class="profile-stat">
-                <i class="lnil lnil-checkmark-circle"></i>
+              <div className="separator"></div>
+              <div className="profile-stat">
+                <i className="lnil lnil-checkmark-circle"></i>
                 <span>{ profile.stats.totalCollects } Collects</span>
               </div>
             </div>
-            <Button type="primary" shape="round" size="large">Follow</Button>
-
+            { doesFollow ? 
+              <Button type="primary" shape="round" size="large" onClick={() => handleUnFollow()}>UnFollow</Button>
+              :
+              <Button type="primary" shape="round" size="large" onClick={() => handleFollow()}>Follow</Button>
+            }
             <Divider />
           </div>
-          <Tabs defaultActiveKey="1" style={{ height: '40vh'}}>
-            <TabPane tab="Followers" key="1">
-              Content of Followers
+          <Tabs defaultActiveKey="1">
+            <TabPane tab="Followers" key="1" style={style}>
+              <List
+                column={8}
+                itemLayout="horizontal"
+                dataSource={followers}
+                renderItem={item => (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={<ProfileAvatar profile={item.wallet.defaultProfile} />}
+                      description={ shortenAddress(item.wallet.address) }
+                      title={item.wallet.defaultProfile ? item.wallet.defaultProfile.handle : "" }
+                    />
+                  </List.Item>
+                )}
+              />
             </TabPane>
-            <TabPane tab="Following" key="2">
+            <TabPane tab="Following" key="2"  style={style}>
               Content of Following
             </TabPane>
-            <TabPane tab="Posts" key="3">
+            <TabPane tab="Posts" key="3"  style={style}>
               Content of Posts
             </TabPane>
-            <TabPane tab="Publications" key="4">
+            <TabPane tab="Publications" key="4"  style={style}>
               Content of Publications
             </TabPane>
-            <TabPane tab="Collects" key="5">
+            <TabPane tab="Collects" key="5"  style={style}>
               Content of Collects
             </TabPane>
             </Tabs>
