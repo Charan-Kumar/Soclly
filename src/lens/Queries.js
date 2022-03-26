@@ -299,7 +299,6 @@ query($request: FollowersRequest!) {
 }
 `;
 
-
 export const CREATE_FOLLOW_TYPED_DATA = `
 mutation($request: FollowRequest!) { 
   createFollowTypedData(request: $request) {

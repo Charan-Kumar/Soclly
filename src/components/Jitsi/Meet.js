@@ -1,14 +1,20 @@
 import React, {  useState } from 'react'
-import { JVB_SERVER } from '../../consts';
+import { JVB_JWT_ISS, JVB_SERVER } from '../../consts';
 import loadScript from "./LoadExternalApiJS";
 import { useEthers } from '@usedapp/core';
 import Progress from '../Utilities/Progress'
-import { JVB_JWT_APP_SECRET, JVB_JWT_AUD, JVB_JWT_APP_ID,  JITSI_SERVER_DOMAIN } from '../../consts'
+import { JVB_JWT_APP_SECRET, JVB_JWT_AUD, JITSI_SERVER_DOMAIN , RTMP_URL } from '../../consts'
 
+function uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
 
 export default function Meet(props) {
   const [loading, setLoading] = useState(true);
   const { chainId } = useEthers()
+  const roomName =  uuidv4()
 
   React.useEffect(async() => {
     let jwt = generateJwt()
@@ -21,14 +27,16 @@ export default function Meet(props) {
     const data = {
       context: {
         user: {
-            avatar: "",
-            name: "",
-            affiliation: "moderator"
+          avatar: null,
+          name: "Shawn",
+          email: "shawn@gmail.com",
+          affiliation: "owner"
         }
       },
       aud: JVB_JWT_AUD,
-      iss: JVB_JWT_APP_ID,
-      sub: JITSI_SERVER_DOMAIN
+      iss: JVB_JWT_ISS,
+      sub: JITSI_SERVER_DOMAIN,
+      room: roomName
     }
     const jwt = sign(data, JVB_JWT_APP_SECRET );
     return jwt;
@@ -65,22 +73,16 @@ export default function Meet(props) {
         setLoading(false);
         var options = {
             width: '100%',
-            roomName: "JitsiLivePeer",
+            roomName: roomName,
             parentNode: document.getElementById('jitsi-container'),
-            interfaceConfigOverwrite: {
-              SHOW_JITSI_WATERMARK: false,
-              filmStripOnly: false,
-            },
-            configOverwrite: {
-                disableSimulcast: false,
-                dynamicBrandingUrl: 'https://raw.githubusercontent.com/prayagsingh/mockserver/main/bloquelabs/jitsibrand.json',
-            },
             jwt: jwt
-        };
+        }
         const api = new window.JitsiMeetExternalAPI(domain, options);
         api.addEventListener('videoConferenceJoined', () => {
           setLoading(false);
         });
+
+        api.executeCommand('startRecording', {  mode: 'stream', rtmpStreamKey: RTMP_URL })
 
 
     } catch (error) {
