@@ -1,0 +1,5 @@
+export const JVB_SERVER ="vs.reachout.network"
+export const JVB_JWT_APP_SECRET="21D40CD42CCA9BE6B8932855781FC840"
+export const JVB_JWT_AUD="myserver1"
+export const JVB_JWT_APP_ID="my_web_client"
+export const JITSI_SERVER_DOMAIN="vs.reachout.network"

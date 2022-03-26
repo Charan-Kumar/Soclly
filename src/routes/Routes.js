@@ -3,6 +3,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import New from '../components/Profile/New'
 import Landing from '../components/Landing/Landing';
 import Home from '../components/Home/Home';
+import Meet from '../components/Jitsi/Meet';
 
 function PrivateRoute({ children }) {
   return ( localStorage.getItem('access_token') !== null) ? children : <Navigate to="/" />;
@@ -22,6 +23,12 @@ export default (childProps) => {
       <Route path="/home" element={
         <PrivateRoute>
           <Home {...childProps} />
+        </PrivateRoute>
+      } />
+
+      <Route path="/meet" element={
+        <PrivateRoute>
+          <Meet {...childProps} />
         </PrivateRoute>
       } />
      
