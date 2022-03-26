@@ -212,3 +212,119 @@ export const RECOMMENDED_PROFILES = `
   	}
   }
 `;
+
+export const GET_FOLLOWERS =`
+query($request: FollowersRequest!) {
+  followers(request: $request) { 
+           items {
+      wallet {
+        address
+        defaultProfile {
+          id
+          name
+          bio
+          location
+          website
+          twitterUrl
+          handle
+          picture {
+            ... on NftImage {
+              contractAddress
+              tokenId
+              uri
+              verified
+            }
+            ... on MediaSet {
+              original {
+                url
+                mimeType
+              }
+            }
+          }
+          coverPicture {
+            ... on NftImage {
+              contractAddress
+              tokenId
+              uri
+              verified
+            }
+            ... on MediaSet {
+              original {
+                url
+                mimeType
+              }
+            }
+          }
+          ownedBy
+          depatcher {
+            address
+            canUseRelay
+          }
+          stats {
+            totalFollowers
+            totalFollowing
+            totalPosts
+            totalComments
+            totalMirrors
+            totalPublications
+            totalCollects
+          }
+          followModule {
+            ... on FeeFollowModuleSettings {
+              type
+              contractAddress
+              amount {
+                asset {
+                  name
+                  symbol
+                  decimals
+                  address
+                }
+                value
+              }
+              recipient
+            }
+          }
+        }
+        totalAmountOfProfiles
+      }
+      totalAmountOfTimesFollowed
+    }
+    pageInfo {
+      prev
+      next
+      totalCount
+    }
+      }
+}
+`;
+
+
+export const CREATE_FOLLOW_TYPED_DATA = `
+mutation($request: FollowRequest!) { 
+  createFollowTypedData(request: $request) {
+    id
+    expiresAt
+    typedData {
+      domain {
+        name
+        chainId
+        version
+        verifyingContract
+      }
+      types {
+        FollowWithSig {
+          name
+          type
+        }
+      }
+      value {
+        nonce
+        deadline
+        profileIds
+        datas
+      }
+    }
+  }
+}
+`;
