@@ -4,6 +4,7 @@ import New from '../components/Profile/New'
 import Landing from '../components/Landing/Landing';
 import Home from '../components/Home/Home';
 import Meet from '../components/Jitsi/Meet';
+import ViewProfile from '../components/Profile/ViewProfile';
 
 function PrivateRoute({ children }) {
   return ( localStorage.getItem('access_token') !== null) ? children : <Navigate to="/" />;
@@ -23,6 +24,12 @@ export default (childProps) => {
       <Route path="/home" element={
         <PrivateRoute>
           <Home {...childProps} />
+        </PrivateRoute>
+      } />
+
+      <Route path="/profile/:handle" element={
+        <PrivateRoute>
+          <ViewProfile {...childProps} />
         </PrivateRoute>
       } />
 

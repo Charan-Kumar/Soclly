@@ -213,7 +213,7 @@ export const RECOMMENDED_PROFILES = `
   }
 `;
 
-const GET_FOLLOWERS = `
+export const GET_FOLLOWERS = `
   query($request: FollowersRequest!) {
     followers(request: $request) { 
 	   items {

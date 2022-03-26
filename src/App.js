@@ -35,7 +35,7 @@ function App() {
     <Layout>
       { loading ? <Loader /> :
         <>
-          { account && <Header className="site-layout-sub-header-background" style={{ padding: '0 20px' }} >
+          { localStorage.getItem('access_token') && <Header className="site-layout-sub-header-background" style={{ padding: '0 20px' }} >
               <Row gutter={[16, 24]}>
                 <Col flex={1} className="gutter-row">
                   <div className="logo">
@@ -58,9 +58,9 @@ function App() {
           }
           
           <Layout>
-            { account && <Sidebar /> }
+            { localStorage.getItem('access_token') && <Sidebar /> }
             <Content>
-              <div className={`${account ? 'content-container': ''}`}>
+              <div className={`${localStorage.getItem('access_token') !== null ? 'content-container': ''}`}>
                 <Routes />
               </div>
             </Content>

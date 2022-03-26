@@ -3,7 +3,8 @@ import { JVB_JWT_ISS, JVB_SERVER } from '../../consts';
 import loadScript from "./LoadExternalApiJS";
 import { useEthers } from '@usedapp/core';
 import Progress from '../Utilities/Progress'
-import { JVB_JWT_APP_SECRET, JVB_JWT_AUD, JITSI_SERVER_DOMAIN , RTMP_URL } from '../../consts'
+import { JVB_JWT_APP_SECRET, JVB_JWT_AUD, JITSI_SERVER_DOMAIN , RTMP_URL } from '../../consts';
+import { useNavigate } from 'react-router-dom'
 
 function uuidv4() {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -15,6 +16,7 @@ export default function Meet(props) {
   const [loading, setLoading] = useState(true);
   const { chainId } = useEthers()
   const roomName =  uuidv4()
+  const navigate = useNavigate();
 
   React.useEffect(async() => {
     let jwt = generateJwt()
@@ -75,16 +77,27 @@ export default function Meet(props) {
             width: '100%',
             roomName: roomName,
             parentNode: document.getElementById('jitsi-container'),
+            interfaceConfigOverwrite: {
+              SHOW_JITSI_WATERMARK: false,
+              filmStripOnly: false,
+            },
+            configOverwrite: {
+                disableSimulcast: false,
+                dynamicBrandingUrl: 'https://raw.githubusercontent.com/prayagsingh/mockserver/main/bloquelabs/jitsibrand.json',
+            },
             jwt: jwt
         }
         const api = new window.JitsiMeetExternalAPI(domain, options);
         api.addEventListener('videoConferenceJoined', () => {
           setLoading(false);
+          api.startRecording({
+            mode: 'stream', //recording mode, either `file` or `stream`.
+            rtmpStreamKey: RTMP_URL, //the RTMP stream key.
+          });
         });
-
-        api.executeCommand('startRecording', {  mode: 'stream', rtmpStreamKey: RTMP_URL })
-
-
+        api.addEventListener('videoConferenceLeft', () => {
+          navigate('/home')
+        })
     } catch (error) {
         console.error('Failed to load Video API', error);
     }

@@ -13,7 +13,6 @@ export default function Sidebar() {
     navigate('/')
     localStorage.removeItem('refresh_token')
     localStorage.removeItem('access_token')
-
   }
 
   return (
@@ -28,7 +27,7 @@ export default function Sidebar() {
         }}
       >
       <Menu theme="dark" mode="inline">
-        <Menu.Item key="1" icon={<HomeOutlined />}>
+        <Menu.Item key="1" icon={<HomeOutlined />} onClick={() => navigate('/home')}>
           Home
         </Menu.Item>
         <Menu.Item key="4" icon={<LogoutOutlined />} onClick={() => logOut()}>

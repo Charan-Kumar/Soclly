@@ -3,11 +3,13 @@ import { Col, Row, Typography, Button, Card } from 'antd';
 import { getRecommendedProfilesRequest } from '../../lens/Api'
 import { shortenAddress } from '@usedapp/core'
 import ProfileAvatar from '../Utilities/ProfileAvatar';
+import { useNavigate } from "react-router-dom";
 
 const { Meta } = Card;
 
 export default function Home() {
   const [ profiles, setProfiles ] = useState([])
+  const navigate = useNavigate();
   useEffect(async() => {
     try{
       const { data } = await getRecommendedProfilesRequest()
@@ -31,7 +33,7 @@ export default function Home() {
                   description={ <Typography.Paragraph copyable={true}>{shortenAddress(p.ownedBy)}</Typography.Paragraph>  }
                 />
                 <Typography.Paragraph style={{minHeight: '45px'}} ellipsis={{ rows: 2, tooltip: true}}>{ p.bio ? p.bio : "Bio unavailable" }</Typography.Paragraph>
-                <Button type="primary" shape="round" size="default">Follow</Button>
+                <Button type="primary" shape="round" size="default" onClick={() => navigate(`/profile/${p.handle}`)}>View</Button>
               </Card>
             </Col>
           )
