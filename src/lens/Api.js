@@ -1,9 +1,11 @@
 import { gql } from "@apollo/client";
 import { ethers } from "ethers";
-import { GENERATE_CHALLENGE, AUTHENTICATE, GET_PROFILES, CREATE_PROFILE, RECOMMENDED_PROFILES , GET_FOLLOWERS, CREATE_FOLLOW_TYPED_DATA} from './Queries';
+import { GENERATE_CHALLENGE, AUTHENTICATE, GET_PROFILES, CREATE_PROFILE, RECOMMENDED_PROFILES , GET_FOLLOWERS, CREATE_FOLLOW_TYPED_DATA, CREATE_UNFOLLOW_TYPED_DATA} from './Queries';
 import { authenticatedApolloClient, apolloClient } from './Apollo'
 import omitDeep from 'omit-deep';
 import lensHubArtifact from "../assets/abi/LensHub.json";
+import followNFTArtifact from "../assets/abi/followNFT.json";
+
 
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 
@@ -130,6 +132,40 @@ export const follow = async (followRequestInfo) => {
     },
   });
 
+}
+
+export const unfollow = async(profileId) => {
+  
+  const result = await createUnfollowTypedData(profileId);
+   
+  const typedData = result.data.createUnfollowTypedData.typedData;
+  
+  const signature = await signedTypeData(typedData.domain, typedData.types, typedData.value);
+  const { v, r, s } = splitSignature(signature);
+  
+  // load up the follower nft contract
+  const followNftContract = new ethers.Contract(
+    typedData.domain.verifyingContract,
+    followNFTArtifact,
+    provider.getSigner()
+  );
+  
+  const sig = {
+      v,
+      r,
+      s,
+      deadline: typedData.value.deadline,
+   }
+  
+  const tx = await followNftContract.burnWithSig(typedData.value.tokenId, sig);
+  console.log(tx.hash);
+}
+
+const createUnfollowTypedData = async (profileId) =>{
+  return authenticatedApolloClient.mutate({
+    mutation : gql(CREATE_UNFOLLOW_TYPED_DATA),
+    variables : {request : {profile : profileId}}
+  })
 }
 
 // @dev Helper Function to intiate the LensHub Contract
