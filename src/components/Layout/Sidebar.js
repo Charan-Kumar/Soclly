@@ -30,7 +30,10 @@ export default function Sidebar() {
         <Menu.Item key="1" icon={<HomeOutlined />} onClick={() => navigate('/home')}>
           Home
         </Menu.Item>
-        <Menu.Item key="4" icon={<LogoutOutlined />} onClick={() => logOut()}>
+        <Menu.Item key="2" icon={<HomeOutlined />} onClick={() => navigate('/me')}>
+          My Profile
+        </Menu.Item>
+        <Menu.Item key="3" icon={<LogoutOutlined />} onClick={() => logOut()}>
           Logout
         </Menu.Item>
       </Menu>

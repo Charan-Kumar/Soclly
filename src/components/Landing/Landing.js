@@ -22,7 +22,7 @@ export default function Landing() {
                 <span>Decentralized Social Network</span>
               </div>
               <div name="content" className="banner-content">
-                <span><font><font>Detailed description of the product, text such as what is it</font></font></span>
+                <span><font><font>A creator-centric community-focused decentralized social network.</font></font></span>
               </div>
               <div name="button" className="banner-button-wrapper"  onClick={() =>  connectWallet()}>
                 <a href="#" data-edit="link,text" className="ant-btn banner-button ant-btn-primary">Connect Wallet</a>

@@ -7,75 +7,30 @@ import ProfileAvatar from '../Utilities/ProfileAvatar';
 import WalletAddress from '../Utilities/WalletAddress';
 import { shortenAddress } from '@usedapp/core';
 
-export default function ViewProfile() {
+export default function MyProfile() {
 
   const [ profile, setProfile] = useState(null)
   const [ followers, setFollowers] = useState([])
   const [ loading, setLoading ] = useState(true)
-  const [ doesFollow, setDoesFollow] = useState(false)
-  const params = useParams()
   const { TabPane } = Tabs;
   const style={ height: '40vh', overflow: 'scroll'}
   const navigate = useNavigate();
 
   React.useEffect(async() => {
     try{
-      const { data } = await getProfilesRequest({ handles: [ params.handle ] })
+      const { data } = await getProfilesRequest({ ownedBy: localStorage.getItem('wallet') })
       if( data.profiles.items.length === 1 ){
         let profile = data.profiles.items[0]
         setProfile(profile)
-        setLoading(false)
 
-        const followers = await getFollowerRequest(profile.id)
+        const followers = await getFollowerRequest(localStorage.getItem('profile_id'))
         setFollowers(followers.data.followers.items)
-
-        let request = {
-          followerAddress: localStorage.getItem('wallet'),
-          profileId: localStorage.getItem('profile_id'),
-        }
-
-        const follow = await doesFollowRequest(request)
-        setDoesFollow(follow.data.doesFollow[0].follows)
+        setLoading(false)
       }
     }catch(error){
       console.log(error)
     }
-  }, [params.address, doesFollow ]);
-
-
-  const handleFollow = async () => {
-  
-    try{
-      let followRequest = [{
-        profile: profile.id,
-        followModule: null
-      }]
-      setLoading(true)
-      await follow(followRequest)
-      setLoading(false)
-      setDoesFollow(true)
-      message.success(`Your are following ${profile.handle} sucessfully.`);
-      
-    }catch(error){
-      console.log(error)
-    }
-  }
-
-  const handleUnFollow= async() => {
-    try{
-      let followRequest = [{
-        profile: profile.id,
-        followModule: null
-      }]
-      setLoading(true)
-      await unfollow( profile.id)
-      setDoesFollow(false)
-      setLoading(false)
-      message.success(`Your are unfollowing ${profile.handle} sucessfully.`);
-    }catch(error){
-      console.log(error)
-    }
-  }
+  }, []);
 
   return (
     <Card hoverable={true}>
@@ -115,11 +70,7 @@ export default function ViewProfile() {
                 <span>{ profile.stats.totalCollects } Collects</span>
               </div>
             </div>
-            { doesFollow ? 
-              <Button type="primary" shape="round" size="large" onClick={() => handleUnFollow()}>UnFollow</Button>
-              :
-              <Button type="primary" shape="round" size="large" onClick={() => handleFollow()}>Follow</Button>
-            }
+              <Button type="primary" shape="round" size="large" onClick={() => navigate('/stream')}>Stream</Button>
             <Divider />
           </div>
           <Tabs defaultActiveKey="1">

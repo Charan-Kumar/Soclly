@@ -3,25 +3,24 @@ import { Layout, Button, Row, Col } from 'antd';
 import Sidebar from './components/Layout/Sidebar';
 import Routes from './routes/Routes';
 import WalletAddress from './components/Utilities/WalletAddress';
-import Loader from './components/Utilities/Progress';
 import logo from './assets/images/logo.svg'
 import { login, getProfilesRequest } from '../src/lens/Api'
 import React from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useEthers } from '@usedapp/core'
 
 
 function App() {
   const { Header, Content } = Layout;
-  const [ loading, setLoading ] = React.useState(false)
   const {  account } = useEthers();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  debugger;
 
   React.useEffect(async() => {
     if( account ){
       await login()
       const { data } = await getProfilesRequest({ ownedBy: account })
-      setLoading(false)
       if( data.profiles.items.length === 0 ){
         navigate('/new_profile')
       }else{
@@ -35,7 +34,7 @@ function App() {
 
   return (
     <Layout>
-      { loading ? <Loader /> :
+      { pathname !== '/stream' ?
         <>
           { localStorage.getItem('access_token') && <Header className="site-layout-sub-header-background" style={{ padding: '0 20px' }} >
               <Row gutter={[16, 24]}>
@@ -68,6 +67,8 @@ function App() {
             </Content>
           </Layout>
         </>
+        :
+        <Routes />
       }
     </Layout>
   );

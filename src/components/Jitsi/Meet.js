@@ -30,8 +30,6 @@ export default function Meet(props) {
       context: {
         user: {
           avatar: null,
-          name: "Shawn",
-          email: "shawn@gmail.com",
           affiliation: "owner"
         }
       },
@@ -96,7 +94,7 @@ export default function Meet(props) {
           });
         });
         api.addEventListener('videoConferenceLeft', () => {
-          navigate('/home')
+          navigate('/me')
         })
     } catch (error) {
         console.error('Failed to load Video API', error);

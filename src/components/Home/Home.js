@@ -28,12 +28,15 @@ export default function Home() {
             <Col span={8}>
               <Card  bordered={true} hoverable={true} style={{marginBottom: '20px'}}>
                 <Meta
-                  avatar={ <ProfileAvatar profile={p} size={60} />}
+                  avatar={ <ProfileAvatar profile={p} size={50} />}
                   title={p.handle}
                   description={ <Typography.Paragraph copyable={true}>{shortenAddress(p.ownedBy)}</Typography.Paragraph>  }
                 />
                 <Typography.Paragraph style={{minHeight: '45px'}} ellipsis={{ rows: 2, tooltip: true}}>{ p.bio ? p.bio : "Bio unavailable" }</Typography.Paragraph>
-                <Button type="primary" shape="round" size="default" onClick={() => navigate(`/profile/${p.handle}`)}>View</Button>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <span>{p.stats.totalFollowers} Followers</span>
+                  <Button type="primary" shape="round" size="default" onClick={() => navigate(`/profile/${p.handle}`)}>View</Button>
+                </div>
               </Card>
             </Col>
           )
