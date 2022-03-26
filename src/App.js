@@ -3,7 +3,7 @@ import { Layout, Button, Row, Col } from 'antd';
 import Sidebar from './components/Layout/Sidebar';
 import Routes from './routes/Routes';
 import WalletAddress from './components/Utilities/WalletAddress';
-import Loader from './components/Utilities/Loader';
+import Loader from './components/Utilities/Progress';
 import logo from './assets/images/logo.svg'
 import { login, getProfilesRequest } from '../src/lens/Api'
 import React from 'react'

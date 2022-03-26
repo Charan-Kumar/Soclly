@@ -30,7 +30,7 @@ export default function Home() {
                   title={p.handle}
                   description={ <Typography.Paragraph copyable={true}>{shortenAddress(p.ownedBy)}</Typography.Paragraph>  }
                 />
-                <Typography.Paragraph style={{minHeight: '50px'}} ellipsis={{ rows: 2, tooltip: true}}>{ p.bio ? p.bio : "Bio unavailable" }</Typography.Paragraph>
+                <Typography.Paragraph style={{minHeight: '45px'}} ellipsis={{ rows: 2, tooltip: true}}>{ p.bio ? p.bio : "Bio unavailable" }</Typography.Paragraph>
                 <Button type="primary" shape="round" size="default">Follow</Button>
               </Card>
             </Col>
