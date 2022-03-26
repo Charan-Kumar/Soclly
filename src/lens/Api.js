@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { ethers } from "ethers";
-import { GENERATE_CHALLENGE, AUTHENTICATE, GET_PROFILES, CREATE_PROFILE  } from './Queries';
+import { GENERATE_CHALLENGE, AUTHENTICATE, GET_PROFILES, CREATE_PROFILE, RECOMMENDED_PROFILES  } from './Queries';
 import { authenticatedApolloClient, apolloClient } from './Apollo'
 
 const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -69,3 +69,9 @@ export const signText = async (data) => {
   
   return await signer.signMessage(data);
 }
+
+export const getRecommendedProfilesRequest = () => {
+  return apolloClient.query({
+    query: gql(RECOMMENDED_PROFILES),
+  });
+};

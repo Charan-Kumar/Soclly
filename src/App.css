@@ -117,3 +117,20 @@
   vertical-align: inherit;
   color: #fff !important;
 }
+
+
+.content-container{
+  background-color: #ececec;
+  padding: 20px;
+}
+
+.loader-wrapper{
+  width: 100vw;
+  height: 100vh;
+}
+
+.loader-wrapper .ant-spin{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}

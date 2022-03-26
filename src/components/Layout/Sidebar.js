@@ -11,6 +11,9 @@ export default function Sidebar() {
   const logOut = () => {
     deactivate()
     navigate('/')
+    localStorage.removeItem('refresh_token')
+    localStorage.removeItem('access_token')
+
   }
 
   return (
