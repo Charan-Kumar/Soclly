@@ -28,7 +28,7 @@ export default function Home() {
             <Col span={8}>
               <Card  bordered={true} hoverable={true} style={{marginBottom: '20px'}}>
                 <Meta
-                  avatar={ <ProfileAvatar profile={p} />}
+                  avatar={ <ProfileAvatar profile={p} size={60} />}
                   title={p.handle}
                   description={ <Typography.Paragraph copyable={true}>{shortenAddress(p.ownedBy)}</Typography.Paragraph>  }
                 />

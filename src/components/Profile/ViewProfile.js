@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Card, Tabs, Divider, Button, message, List } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import { getProfilesRequest, follow , unfollow, getFollowerRequest, doesFollowRequest } from '../../lens/Api'
 import Progress from '../Utilities/Progress';
 import ProfileAvatar from '../Utilities/ProfileAvatar';
@@ -16,6 +15,7 @@ export default function ViewProfile() {
   const params = useParams()
   const { TabPane } = Tabs;
   const style={ height: '40vh', overflow: 'scroll'}
+  const navigate = useNavigate();
 
   React.useEffect(async() => {
     try{
@@ -128,9 +128,13 @@ export default function ViewProfile() {
                 itemLayout="horizontal"
                 dataSource={followers}
                 renderItem={item => (
-                  <List.Item>
-                    <List.Item.Meta
-                      avatar={<ProfileAvatar profile={item.wallet.defaultProfile} />}
+                  <List.Item  onClick={() => { 
+                    if(item.wallet.defaultProfile)
+                        navigate(`/profile/${item.wallet.defaultProfile.handle}`)
+                        window.location.reload()
+                    }}>
+                    <List.Item.Meta style={{flex: 'none'}}
+                      avatar={<ProfileAvatar profile={item.wallet.defaultProfile} size={60} />}
                       description={ shortenAddress(item.wallet.address) }
                       title={item.wallet.defaultProfile ? item.wallet.defaultProfile.handle : "" }
                     />
