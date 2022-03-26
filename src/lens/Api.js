@@ -89,6 +89,7 @@ export const getFollowerRequest = (profileId) => {
   })
 }
 
+// @dev Helper function to sign the typed data generated through Lens API query
 const signTypedData = (domain, types, values) => {
   const signer = provider.getSigner();
   return signer._signTypedData(
@@ -98,10 +99,14 @@ const signTypedData = (domain, types, values) => {
   );
 }
 
+//@dev helper function to split any signature into {v,r,s} 
 const splitSignature = (signature) => {
   return ethers.utils.splitSignature(signature);
 }
 
+
+// @dev This is the Function to be called when the follow data has been finalized 
+// the followRequestInfo here will be an array of [{}] according to https://docs.lens.dev/docs/create-follow-typed-data
 export const follow = async (followRequestInfo) => {
 
   const result = await createFollowTypedData(followRequestInfo);
@@ -125,12 +130,14 @@ export const follow = async (followRequestInfo) => {
 
 }
 
+// @dev Helper Function to intiate the LensHub Contract
 const getLensHub = async () => {
   const lensHubAddress = "0xd7B3481De00995046C7850bCe9a5196B7605c367"
   return await ethers.Contract(lensHubAddress , lensHubArtifact, provider);
 }
 
-/// @dev the createFollowTypedData Mutation needs to use EIP 712 Typed data to work
+/// @dev the createFollowTypedData Mutation to create EIP 712 Typed Data
+// Implicitly Called in the follow function
 export const createFollowTypedData = async (followRequestInfo) => {
    return apolloClient.mutate(
     {
