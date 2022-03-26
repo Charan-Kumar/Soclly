@@ -117,7 +117,7 @@ export const follow = async (followRequestInfo) => {
   
   const signature = await signTypedData (typedData.domain , typedData.types, typedData.value);
   const {v,r,s} = splitSignature(signature);
-  const lensHub = getLensHub()
+  const lensHub =await getLensHub()
   const tx = await lensHub.followWithSig({
     follower : getAddress(),
     profileIds : typedData.value.profileIds,
@@ -135,13 +135,14 @@ export const follow = async (followRequestInfo) => {
 // @dev Helper Function to intiate the LensHub Contract
 const getLensHub = async () => {
   const lensHubAddress = "0xd7B3481De00995046C7850bCe9a5196B7605c367"
-  return await ethers.Contract(lensHubAddress , lensHubArtifact, provider);
+  const signer = provider.getSigner();
+  return await new ethers.Contract(lensHubAddress , lensHubArtifact, signer);
 }
 
 /// @dev the createFollowTypedData Mutation to create EIP 712 Typed Data
 // Implicitly Called in the follow function
 export const createFollowTypedData = async (followRequestInfo) => {
-   return apolloClient.mutate(
+   return authenticatedApolloClient.mutate(
     {
       mutation : gql(CREATE_FOLLOW_TYPED_DATA),
       variables : {request: {follow : followRequestInfo,}}
