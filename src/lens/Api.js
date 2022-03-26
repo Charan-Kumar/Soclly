@@ -83,8 +83,10 @@ export const getFollowerRequest = (profileId) => {
   return apolloClient.query({
     query : gql(GET_FOLLOWERS),
     variables : {
+      request : {
       profileId,
       limit : 10
+      }
     }
   })
 }
