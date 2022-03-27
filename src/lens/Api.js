@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { ethers } from "ethers";
-import { GENERATE_CHALLENGE, AUTHENTICATE, GET_PROFILES, CREATE_PROFILE, RECOMMENDED_PROFILES , GET_FOLLOWERS, CREATE_FOLLOW_TYPED_DATA, CREATE_UNFOLLOW_TYPED_DATA, DOES_FOLLOW} from './Queries';
+import { GENERATE_CHALLENGE, AUTHENTICATE, GET_PROFILES, CREATE_PROFILE, RECOMMENDED_PROFILES , GET_FOLLOWERS, CREATE_FOLLOW_TYPED_DATA, CREATE_UNFOLLOW_TYPED_DATA, DOES_FOLLOW, GET_PUBLICATIONS} from './Queries';
 import { authenticatedApolloClient, apolloClient } from './Apollo'
 import omitDeep from 'omit-deep';
 import lensHubArtifact from "../assets/abi/LensHub.json";
@@ -196,3 +196,17 @@ export const doesFollowRequest = (followInfos) => {
     },
   });
 };
+
+// @dev getPublicationQuery Structure : 
+// {
+  // profileId : "0x..",
+  // publicationType : ["POST","COMMENT","MIRROR"]
+// }
+export const getPublications = (getPublicationQuery) => {
+  return apolloClient.query({
+    query : gql(GET_PUBLICATIONS),
+    variables : {
+      request : getPublicationQuery
+    }
+  })
+}
