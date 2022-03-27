@@ -1,6 +1,17 @@
 import { gql } from "@apollo/client";
 import { ethers } from "ethers";
-import { GENERATE_CHALLENGE, AUTHENTICATE, GET_PROFILES, CREATE_PROFILE, RECOMMENDED_PROFILES , GET_FOLLOWERS, CREATE_FOLLOW_TYPED_DATA, CREATE_UNFOLLOW_TYPED_DATA, DOES_FOLLOW, GET_PUBLICATIONS} from './Queries';
+import { GENERATE_CHALLENGE, AUTHENTICATE, 
+  GET_PROFILES,
+  CREATE_PROFILE,
+  RECOMMENDED_PROFILES ,
+  GET_FOLLOWERS,
+  CREATE_FOLLOW_TYPED_DATA,
+  CREATE_UNFOLLOW_TYPED_DATA,
+  DOES_FOLLOW,
+  GET_PUBLICATIONS,
+  EXPLORE_PUBLICATIONS,
+  GET_TIMELINE
+} from './Queries';
 import { authenticatedApolloClient, apolloClient } from './Apollo'
 import omitDeep from 'omit-deep';
 import lensHubArtifact from "../assets/abi/LensHub.json";
@@ -207,6 +218,37 @@ export const getPublications = (getPublicationQuery) => {
     query : gql(GET_PUBLICATIONS),
     variables : {
       request : getPublicationQuery
+    }
+  })
+}
+
+// @dev the structure for explorePublicationQueryRequest 
+// {
+//  sortCriteria : "TOP_COLLECTED"/"TOP_COMMENTED"
+//  limit :
+// }
+export const explorePublications = () => {
+  const explorePublicationQueryRequest = {
+    sortCriteria : "TOP_COLLECTED",
+    limt : 10
+  }
+  return apolloClient.query({
+    query : gql(EXPLORE_PUBLICATIONS),
+    variables : {
+      request : explorePublicationQueryRequest
+    }
+  })
+}
+
+// @dev Pass the Profile Id you need the timeline for
+export const getTimeline = (profileId) => {
+  return apolloClient.query({
+    query : gql(GET_TIMELINE),
+    variables : {
+      request : {
+        profileId,
+        limit : 10
+      }
     }
   })
 }
