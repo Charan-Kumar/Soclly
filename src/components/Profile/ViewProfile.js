@@ -7,7 +7,7 @@ import ProfileAvatar from '../Utilities/ProfileAvatar';
 import WalletAddress from '../Utilities/WalletAddress';
 import Followers from './Followers'
 import Followings from './Followings'
-
+import Posts from './Posts'
 
 export default function ViewProfile() {
 
@@ -58,6 +58,7 @@ export default function ViewProfile() {
       message.success(`Your are following ${profile.handle} sucessfully.`);
       
     }catch(error){
+      debugger;
       console.log(error)
     }
   }
@@ -131,7 +132,7 @@ export default function ViewProfile() {
               <Followings ownedBy={profile.ownedBy} />
             </TabPane>
             <TabPane tab="Posts" key="3"  style={style}>
-              
+              <Posts profileId={profile.id} />
             </TabPane>
             <TabPane tab="NFT's" key="4"  style={style}>
               

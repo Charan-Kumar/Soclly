@@ -5,9 +5,9 @@ import { getProfilesRequest, follow , unfollow, getFollowerRequest, doesFollowRe
 import Progress from '../Utilities/Progress';
 import ProfileAvatar from '../Utilities/ProfileAvatar';
 import WalletAddress from '../Utilities/WalletAddress';
-import { shortenAddress } from '@usedapp/core';
 import Followers from './Followers'
 import Followings from './Followings'
+import Posts from './Posts';
 
 
 export default function MyProfile() {
@@ -79,7 +79,10 @@ export default function MyProfile() {
             <TabPane tab="Following" key="2"  style={style}>
               <Followings ownedBy={localStorage.getItem('wallet')} />
             </TabPane>
-            <TabPane tab="NFT's" key="5"  style={style}>
+            <TabPane tab="Posts" key="3"  style={style}>
+              <Posts profileId={localStorage.getItem('profile_id')} />
+            </TabPane>
+            <TabPane tab="NFT's" key="4"  style={style}>
               Content of NFT's
             </TabPane>
             </Tabs>

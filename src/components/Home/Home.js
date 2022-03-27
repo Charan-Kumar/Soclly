@@ -55,7 +55,7 @@ export default function Home() {
               <Card  bordered={true} hoverable={true} style={{marginBottom: '20px'}}>
                 <Meta
                   avatar={ <ProfileAvatar profile={p} size={50} />}
-                  title={p.handle}
+                  title={ `@${p.handle}`}
                   description={ <Typography.Paragraph copyable={true}>{shortenAddress(p.ownedBy)}</Typography.Paragraph>  }
                 />
                 <Typography.Paragraph style={{minHeight: '45px'}} ellipsis={{ rows: 2, tooltip: true}}>{ p.bio ? p.bio : "Bio unavailable" }</Typography.Paragraph>
