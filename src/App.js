@@ -15,7 +15,6 @@ function App() {
   const {  account } = useEthers();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  debugger;
 
   React.useEffect(async() => {
     if( account ){

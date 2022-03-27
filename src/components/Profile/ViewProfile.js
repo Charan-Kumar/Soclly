@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Card, Tabs, Divider, Button, message, List } from 'antd';
-import { getProfilesRequest, follow , unfollow, getFollowerRequest, doesFollowRequest } from '../../lens/Api'
+import { getProfilesRequest, follow , unfollow, getFollowerRequest,getFollowingRequest, getUsersNfts, doesFollowRequest } from '../../lens/Api'
 import Progress from '../Utilities/Progress';
 import ProfileAvatar from '../Utilities/ProfileAvatar';
 import WalletAddress from '../Utilities/WalletAddress';
-import { shortenAddress } from '@usedapp/core';
+import Followers from './Followers'
+import Followings from './Followings'
+
 
 export default function ViewProfile() {
 
   const [ profile, setProfile] = useState(null)
-  const [ followers, setFollowers] = useState([])
+  const [ nfts, setNfts] = useState([])
   const [ loading, setLoading ] = useState(true)
   const [ doesFollow, setDoesFollow] = useState(false)
   const params = useParams()
@@ -26,18 +28,17 @@ export default function ViewProfile() {
         setProfile(profile)
         setLoading(false)
 
-        const followers = await getFollowerRequest(profile.id)
-        setFollowers(followers.data.followers.items)
-
         let request = {
           followerAddress: localStorage.getItem('wallet'),
-          profileId: localStorage.getItem('profile_id'),
+          profileId: profile.id,
         }
 
-        const follow = await doesFollowRequest(request)
+        debugger;
+        const follow = await doesFollowRequest([request])
         setDoesFollow(follow.data.doesFollow[0].follows)
       }
     }catch(error){
+      debugger;
       console.log(error)
     }
   }, [params.address, doesFollow ]);
@@ -124,36 +125,16 @@ export default function ViewProfile() {
           </div>
           <Tabs defaultActiveKey="1">
             <TabPane tab="Followers" key="1" style={style}>
-              <List
-                column={8}
-                itemLayout="horizontal"
-                dataSource={followers}
-                renderItem={item => (
-                  <List.Item  onClick={() => { 
-                    if(item.wallet.defaultProfile)
-                        navigate(`/profile/${item.wallet.defaultProfile.handle}`)
-                        window.location.reload()
-                    }}>
-                    <List.Item.Meta style={{flex: 'none'}}
-                      avatar={<ProfileAvatar profile={item.wallet.defaultProfile} size={50} />}
-                      description={ shortenAddress(item.wallet.address) }
-                      title={item.wallet.defaultProfile ? item.wallet.defaultProfile.handle : "" }
-                    />
-                  </List.Item>
-                )}
-              />
+              <Followers profileId={profile.id} />
             </TabPane>
             <TabPane tab="Following" key="2"  style={style}>
-              Content of Following
+              <Followings ownedBy={profile.ownedBy} />
             </TabPane>
             <TabPane tab="Posts" key="3"  style={style}>
-              Content of Posts
+              
             </TabPane>
-            <TabPane tab="Publications" key="4"  style={style}>
-              Content of Publications
-            </TabPane>
-            <TabPane tab="Collects" key="5"  style={style}>
-              Content of Collects
+            <TabPane tab="NFT's" key="4"  style={style}>
+              
             </TabPane>
             </Tabs>
         </div>

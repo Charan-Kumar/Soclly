@@ -6,11 +6,13 @@ import Progress from '../Utilities/Progress';
 import ProfileAvatar from '../Utilities/ProfileAvatar';
 import WalletAddress from '../Utilities/WalletAddress';
 import { shortenAddress } from '@usedapp/core';
+import Followers from './Followers'
+import Followings from './Followings'
+
 
 export default function MyProfile() {
 
   const [ profile, setProfile] = useState(null)
-  const [ followers, setFollowers] = useState([])
   const [ loading, setLoading ] = useState(true)
   const { TabPane } = Tabs;
   const style={ height: '40vh', overflow: 'scroll'}
@@ -22,9 +24,6 @@ export default function MyProfile() {
       if( data.profiles.items.length === 1 ){
         let profile = data.profiles.items[0]
         setProfile(profile)
-
-        const followers = await getFollowerRequest(localStorage.getItem('profile_id'))
-        setFollowers(followers.data.followers.items)
         setLoading(false)
       }
     }catch(error){
@@ -75,36 +74,13 @@ export default function MyProfile() {
           </div>
           <Tabs defaultActiveKey="1">
             <TabPane tab="Followers" key="1" style={style}>
-              <List
-                column={8}
-                itemLayout="horizontal"
-                dataSource={followers}
-                renderItem={item => (
-                  <List.Item  onClick={() => { 
-                    if(item.wallet.defaultProfile)
-                        navigate(`/profile/${item.wallet.defaultProfile.handle}`)
-                        window.location.reload()
-                    }}>
-                    <List.Item.Meta style={{flex: 'none'}}
-                      avatar={<ProfileAvatar profile={item.wallet.defaultProfile} size={50} />}
-                      description={ shortenAddress(item.wallet.address) }
-                      title={item.wallet.defaultProfile ? item.wallet.defaultProfile.handle : "" }
-                    />
-                  </List.Item>
-                )}
-              />
+              <Followers profileId={localStorage.getItem('profile_id')} />
             </TabPane>
             <TabPane tab="Following" key="2"  style={style}>
-              Content of Following
+              <Followings ownedBy={localStorage.getItem('wallet')} />
             </TabPane>
-            <TabPane tab="Posts" key="3"  style={style}>
-              Content of Posts
-            </TabPane>
-            <TabPane tab="Publications" key="4"  style={style}>
-              Content of Publications
-            </TabPane>
-            <TabPane tab="Collects" key="5"  style={style}>
-              Content of Collects
+            <TabPane tab="NFT's" key="5"  style={style}>
+              Content of NFT's
             </TabPane>
             </Tabs>
         </div>

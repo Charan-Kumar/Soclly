@@ -1,6 +1,15 @@
 import { gql } from "@apollo/client";
 import { ethers } from "ethers";
-import { GENERATE_CHALLENGE, AUTHENTICATE, GET_PROFILES, CREATE_PROFILE, RECOMMENDED_PROFILES , GET_FOLLOWERS, CREATE_FOLLOW_TYPED_DATA, CREATE_UNFOLLOW_TYPED_DATA, DOES_FOLLOW} from './Queries';
+import { GENERATE_CHALLENGE,
+      AUTHENTICATE, GET_PROFILES, 
+      CREATE_PROFILE, 
+      RECOMMENDED_PROFILES ,
+      GET_FOLLOWERS, 
+      GET_FOLLOWING, 
+      GET_USERS_NFTS, 
+      CREATE_FOLLOW_TYPED_DATA,
+      CREATE_UNFOLLOW_TYPED_DATA, 
+      DOES_FOLLOW, SEARCH } from './Queries';
 import { authenticatedApolloClient, apolloClient } from './Apollo'
 import omitDeep from 'omit-deep';
 import lensHubArtifact from "../assets/abi/LensHub.json";
@@ -87,11 +96,39 @@ export const getFollowerRequest = (profileId) => {
     variables : {
       request : {
       profileId,
-      limit : 30
+      limit : 10
       }
     }
   })
 }
+
+/// @dev the get Followings Query needs to be based the wallaet Address
+export const getFollowingRequest = (walletAddress) => {
+  return apolloClient.query({
+    query : gql(GET_FOLLOWING),
+    variables : {
+      request : {
+        address: walletAddress,
+        limit : 10
+      }
+    }
+  })
+}
+
+export const getUsersNfts = ( ownerAddress, chainIds= [ 80001 ], contractAddress="0x54be3a794282c030b15e43ae2bb182e14c409c5e") => {
+  return apolloClient.query({
+    query: gql(GET_USERS_NFTS),
+    variables: {
+      request: {
+        ownerAddress,
+        contractAddress,
+        chainIds,
+        limit: 10,
+      },
+    },
+  });
+};
+
 
 // @dev Helper function to sign the typed data generated through Lens API query
 const signTypedData = (domain, types, values) => {
@@ -187,12 +224,22 @@ export const createFollowTypedData = async (followRequestInfo) => {
 }
 
 export const doesFollowRequest = (followInfos) => {
+  debugger;
   return apolloClient.query({
     query: gql(DOES_FOLLOW),
     variables: {
       request: {
         followInfos,
       },
+    },
+  });
+};
+
+export const searchRequest = (request) => {
+  return apolloClient.query({
+    query: gql(SEARCH),
+    variables: {
+      request,
     },
   });
 };
