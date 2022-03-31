@@ -90,7 +90,7 @@ export default function Meet(props) {
           setLoading(false);
           api.startRecording({
             mode: 'stream', //recording mode, either `file` or `stream`.
-            rtmpStreamKey: RTMP_URL, //the RTMP stream key.
+            rtmpStreamKey: RTMP_URL, //the LivePeer RTMP stream key. We are providing livepeer stream-key using env variable.
           });
         });
         api.addEventListener('videoConferenceLeft', () => {
