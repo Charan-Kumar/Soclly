@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+    jicofo:
+        image: prayagsingh/jicofo:rn_v1
+        deploy:
+          replicas: 1
+          update_config:
+            failure_action: rollback
+          restart_policy:
+            condition: on-failure
+            delay: 5s
+            max_attempts: 5 
+        environment:
+            AUTH_TYPE: jwt
+            BRIDGE_AVG_PARTICIPANT_STRESS:
+            BRIDGE_STRESS_THRESHOLD:
+            ENABLE_AUTH: 0
+            ENABLE_AUTO_LOGIN:
+            ENABLE_AUTO_OWNER: "false"
+            ENABLE_CODEC_VP8: "true"
+            ENABLE_CODEC_VP9: "true"
+            ENABLE_CODEC_H264: "true"
+            ENABLE_OCTO:
+            ENABLE_RECORDING: 0
+            ENABLE_SCTP: "false"
+            JICOFO_AUTH_PASSWORD: XXX
+            JICOFO_AUTH_USER: focus
+            JICOFO_ENABLE_BRIDGE_HEALTH_CHECKS: "true"
+            JICOFO_CONF_INITIAL_PARTICIPANT_WAIT_TIMEOUT:
+            JICOFO_CONF_SINGLE_PARTICIPANT_TIMEOUT:
+            JICOFO_ENABLE_HEALTH_CHECKS: "false"
+            JICOFO_SHORT_ID: 1
+            JICOFO_RESERVATION_ENABLED:
+            JICOFO_RESERVATION_REST_BASE_URL:
+            JIBRI_BREWERY_MUC: jibribrewery
+            JIBRI_REQUEST_RETRIES:
+            JIBRI_PENDING_TIMEOUT: 90
+            JIGASI_BREWERY_MUC: jigasibrewery
+            JIGASI_SIP_URI:
+            JVB_BREWERY_MUC: jvbbrewery
+            MAX_BRIDGE_PARTICIPANTS:
+            OCTO_BRIDGE_SELECTION_STRATEGY: SingleBridgeSelectionStrategy
+            SENTRY_DSN: "${JICOFO_SENTRY_DSN:-0}"
+            SENTRY_ENVIRONMENT:
+            SENTRY_RELEASE:
+            TZ: Asia/Kolkata
+            XMPP_DOMAIN: vs.meet.jitsi
+            XMPP_AUTH_DOMAIN: auth.vs.meet.jitsi
+            XMPP_INTERNAL_MUC_DOMAIN: internal-muc.vs.meet.jitsi
+            XMPP_SERVER: xmpp.vs.meet.jitsi
+            XMPP_MUC_DOMAIN: muc.vs.meet.jitsi
+        depends_on:
+            - prosody
+        volumes:
+            - ${CONFIG}/jicofo:/config
+        ports:
+            - target: 8888
+              published: 8888
+        networks:
+            jitsi:
+# Custom network so all services can communicate using a FQDN
+networks:
+  proxy:
+    external: true
+    name: proxy
+  jitsi:
+    external: true
+    name: jitsi

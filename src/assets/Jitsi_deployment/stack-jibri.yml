@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+    jibri:
+        image:  prayagsingh/jibri-pulseaudio:latest
+        ports:
+          - target: 3333
+            published: 3333
+            mode: host
+            protocol: tcp
+          - target: 2222
+            published: 2222
+            mode: host
+            protocol: tcp
+
+        deploy:
+          replicas: 1
+          update_config:
+            parallelism: 1
+            failure_action: rollback
+          restart_policy:
+            condition: on-failure
+            delay: 5s
+        extra_hosts:
+            "meet.jitsi": "1.2.3.4" # update_this
+        environment:
+            # rclone config
+            ENABLE_RCLONE: 0 # false by default
+            S3_REMOTE_NAME: ""
+            S3_PROVIDER_NAME: ""
+            RCLONE_ENV_AUTH: ""
+            AWS_ACCESS_KEY_ID: "" 
+            AWS_SECRET_ACCESS_KEY: ""
+            S3_REGION: ""
+            S3_ENDPOINT: ""
+            # jibri config
+            XMPP_SERVER: "xmpp.meet.jitsi"
+            XMPP_DOMAIN: "meet.jitsi"
+            XMPP_AUTH_DOMAIN: "auth.meet.jitsi"
+            XMPP_BOSH_URL_BASE: "http://xmpp.meet.jitsi:5280"
+            XMPP_GUEST_DOMAIN: "guest.meet.jitsi"
+            XMPP_MUC_DOMAIN: "muc.meet.jitsi"
+            XMPP_INTERNAL_MUC_DOMAIN: "internal-muc.meet.jitsi"
+            XMPP_RECORDER_DOMAIN: "recorder.meet.jitsi"
+            TZ: "Asia/Kolkata"
+            JIBRI_BREWERY_MUC: "jibribrewery"
+            JIBRI_PENDING_TIMEOUT: "90"
+            JIBRI_XMPP_USER: "jibri"
+            JIBRI_XMPP_PASSWORD: "XXX"
+            JIBRI_RECORDER_USER: "recorder"
+            JIBRI_RECORDER_PASSWORD: "XXX"
+            DISPLAY: ":0"
+            JIBRI_RECORDING_DIR: "/config/jibri/recording"
+            JIBRI_FINALIZE_RECORDING_SCRIPT_PATH: "/config/jibri/finalize.sh"
+            JIBRI_STRIP_DOMAIN_JID: "muc"
+            JIBRI_LOGS_DIR: "/config/jibri/logs"
+            # new config
+            ENABLE_JIBRI_HTTP_API_PORT: 1
+            JIBRI_HTTP_API_EXTERNAL_PORT: 2222
+            JIBRI_HTTP_API_INTERNAL_PORT: 3333
+            JIBRI_USAGE_TIMEOUT: 0
+            XMPP_TRUST_ALL_CERTS: "true"
+            CHROMIUM_FLAGS: "--use-fake-ui-for-media-stream,--start-maximized,--kiosk,--enabled,--disable-infobars,--autoplay-policy=no-user-gesture-required,--no-sandbox,–disable-dev-shm-usage"
+            ENABLE_STATS_D: "true"
+            JIBRI_RECORDING_RESOLUTION: "1280x720"
+            JIBRI_FFMPEG_AUDIO_SOURCE: "pulse"
+            JIBRI_FFMPEG_AUDIO_DEVICE: "default"
+            PUBLIC_URL: ""
+            LIVE_PEER_RTMP_URL: XXX
+        volumes:
+            - /home/username/config:/config:Z
+            - /dev/shm:/dev/shm
+        networks:
+            jitsi:
+              aliases:
+                - jibri
+# Custom network so all services can communicate using a FQDN
+networks:
+  proxy:
+    external: true
+    name: proxy
+  jitsi:
+    external: true
+    name: jitsi
