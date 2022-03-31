@@ -1,1 +1,1 @@
-## Some of the env variables are provided at the time of deployment including LivePeer stream key. Please note that this stream is unqiue for every user hence first you need to create an account on LivePeer to get the stream key.
+## Some of the env variables are provided at the time of deployment including LivePeer stream key. Please note that this stream key is unqiue for every user hence first you need to create an account on LivePeer to get the stream key.
